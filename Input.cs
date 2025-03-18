@@ -7,8 +7,7 @@ public class Input
 
     public string AppropriateInput()
     {
-        string? outside = Console.ReadLine();
-        string? input = outside;
+        string? input = Console.ReadLine();
         if (input == null || input == "")
         {
             throw new ArgumentNullException(input);
@@ -23,15 +22,15 @@ public class Input
         }
         return input;
     }
-    public bool InputInRange(string? input, Dictionary<int, string>? range, out int decision)
+    public bool InputInRange(string? input, Dictionary<int, string> range, out int decision)
     {
-        if (int.TryParse(input, out int number) && range!=null && range.Keys.Any(k => k == number))
+        if (int.TryParse(input, out int number) && range.Keys.Any(k => k == number))
         {
             Console.WriteLine($"You chose {input}");
             decision = number;
             return true;
         }else{
-             throw new ArgumentException("Invalid number");
+             throw new ArgumentException("Invalid input, type a number from the list below");
         }
     }
 }

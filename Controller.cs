@@ -1,11 +1,11 @@
 public class Controller
 {
-    private Analyser Analyser { get; set; }
+    private Analyzer Analyzer { get; set; }
     private View View { get; set; }
     private Input Input { get; set; }
-    public Controller(Analyser analyser, View view, Input input)
+    public Controller(Analyzer analyzer, View view, Input input)
     {
-        Analyser = analyser;
+        Analyzer = analyzer;
         View = view;
         Input = input;
     }
@@ -25,14 +25,17 @@ public class Controller
         {
             try
             {
-                View.DisplayAllOptions(Analyser.options);
+                Console.WriteLine("Write your password:");
+                Analyzer.SetPassword(new Password(Input.AppropriateInput()));
+                View.DisplayAllOptions(Analyzer.options);
                 Console.WriteLine("Choose your option:");
-                Input.InputInRange(Input.AppropriateInput(), Analyser.options, out int decision);
+                Input.InputInRange(Input.AppropriateInput(), Analyzer.options, out int decision);
                 // TODO Only 2 options ar first, work with your password or generate password 
                 switch (decision)
                 {
-                    case 1: Console.WriteLine("Type your password"); View.DisplayContent(Analyser, new Password(Input.AppropriateInput())); continue;
-                    case 2: Console.WriteLine("Create strong password"); View.DisplayFinalResult(Analyser.AnalyseMinimunRequirements(new Password(Input.AppropriateInput())).ToString()); continue;
+                    case 1: Console.WriteLine("Type your password"); View.DisplayContent(Analyzer); continue;
+                    case 2: View.DisplayStrength(Analyzer); continue;
+                    case 3: ; continue;
                     case 0: break;
                     default: break;
                 }
