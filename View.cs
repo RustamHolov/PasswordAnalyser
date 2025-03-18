@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
+using System.Reflection;
+using System.Reflection.Emit;
 
 public class View
 {
-
-    public void DisplayContent(Analyser analyser, string password)
+    
+    public void DisplayContent(Analyser analyser, Password pass)
     {
-        Console.WriteLine($"Your password consist of :\n{analyser.ContentAnalyse(password)}");
+        Console.WriteLine($"Your password consist of :\n{analyser.ContentAnalyse(pass)}");
     }
     
     public void DisplayStrength(Analyser analyser)
@@ -37,12 +39,15 @@ public class View
         Console.WriteLine(analyser.GeneratePersonalizedPassword(p));
     }
 
-    public void DisplayFinalResult(Analyser analyser) {
-        Console.WriteLine($"Your password is: {analyser.password} and it's {analyser.StrengthAnalyse()}");
+    public void DisplayFinalResult(string password) {
+        Console.WriteLine($"Your password is: {password} and it's Strong");
     }
 
-    public static List<string> DisplayAllOptions() => new List<string> { "All methods from View" }; 
+    public void DisplayAllOptions(Dictionary<int, string> options){
+        foreach (var option in options){
+            Console.WriteLine($"{option.Key}. {option.Value}");
+        }
+    }
 
-    public static string FormateOptionsForConsole(List<string> options) => string.Join("\n", options);
 
 }
