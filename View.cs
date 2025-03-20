@@ -6,44 +6,20 @@ using System.Reflection.Emit;
 public class View
 {
 
-    public void DisplayContent(Analyzer analyser)
+    public void DisplayPassword(Password pass) => Console.Write(pass.ToString());
+    public void DisplayContent(Analyzer analyser, Password pass)
     {
-        Console.WriteLine($"Your password consist of :\n{analyser.ContentAnalyze()}");
+        Console.Write("Your password [");
+        DisplayPassword(pass);
+        Console.WriteLine($"] consist of:\n{analyser.ContentAnalyze()} ");
     }
 
     public void DisplayStrength(Analyzer analyser)
     {
-        Console.WriteLine($"Your password rated as {analyser.StrengthAnalyze()}");
+        Console.WriteLine(analyser.PasswordInfo());
     }
 
-    public void DisplayTips(Analyzer analyser, Person person)
-    {
-        foreach (var tip in analyser.GenerateTips(person))
-        {
-            Console.WriteLine(tip);
-        }
-    }
-
-    public void DisplayPassword(Analyzer analyser)
-    {
-        Console.WriteLine(analyser.GeneratePassword());
-    }
-
-    public void DisplayRandomPassword(Analyzer analyser)
-    {
-        Console.WriteLine(analyser.GenerateRandomPassword());
-    }
-
-    public void DisplayPersonalizedPassword(Analyzer analyser, Person p)
-    {
-        Console.WriteLine(analyser.GeneratePersonalizedPassword(p));
-    }
-
-    public void DisplayFinalResult(string password)
-    {
-        Console.WriteLine($"Your password is: {password} and it's Strong");
-    }
-
+    public void DisplayUpToDate(Analyzer analyzer) => Console.WriteLine(analyzer.DefaultStrongPassword() ? "Password is strong for current time" : "Password can be cracked");
     public void DisplayAllOptions(Dictionary<int, string> options)
     {
         foreach (var option in options)
@@ -52,5 +28,28 @@ public class View
         }
     }
 
+
+    public void DisplayTips(Generator gen, Person person)
+    {
+        foreach (var tip in gen.GenerateTips(person))
+        {
+            Console.WriteLine(tip);
+        }
+    }
+
+    public void DisplayPassword(Generator gen)
+    {
+        Console.WriteLine(gen.GeneratePassword());
+    }
+
+    public void DisplayRandomPassword(Generator gen)
+    {
+        Console.WriteLine(gen.GenerateRandomPassword());
+    }
+
+    public void DisplayPersonalizedPassword(Generator gen, Person p)
+    {
+        Console.WriteLine(gen.GeneratePersonalizedPassword(p));
+    }
 
 }

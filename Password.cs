@@ -1,19 +1,26 @@
-public class Password{
+public class Password
+{
     public string? Sequence { get; set; }
     public int Letters;
     public int Numbers;
-    public int SpecialCharacters;
+    public int SpecialSymbols;
     public int Length;
     public int UppercaseLetters;
-    public Password(string password){
+    public bool HasUpperLetters;
+    public bool HasNumbers;
+    public bool HasSpecialSymbols;
+    public Password(string password)
+    {
         Sequence = password;
         Length = password.Length;
         Numbers = password.Count(char.IsDigit);
-        SpecialCharacters = password.Count(c => char.IsSymbol(c) || char.IsSeparator(c) || char.IsPunctuation(c));
+        SpecialSymbols = password.Count(c => char.IsSymbol(c) || char.IsSeparator(c) || char.IsPunctuation(c));
         UppercaseLetters = password.Count(char.IsUpper);
-        Letters = Length - Numbers - SpecialCharacters - UppercaseLetters;
+        Letters = Length - Numbers - SpecialSymbols - UppercaseLetters;
+        HasUpperLetters = UppercaseLetters > 0;
+        HasNumbers = Numbers > 0;
+        HasSpecialSymbols = SpecialSymbols > 0;
     }
-    
 
     public override string ToString() => Sequence ?? string.Empty;
 }

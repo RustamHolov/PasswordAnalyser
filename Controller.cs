@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 public class Controller
 {
     private Analyzer Analyzer { get; set; }
@@ -9,16 +11,7 @@ public class Controller
         View = view;
         Input = input;
     }
-    // public void GenerateMenu(){
-    //     List<string> options = View.DisplayAllOptions();
-    //     foreach (var option in options){
-    //         Console.WriteLine(option);
-    //     }
-    // }
-    public void GenerationMenu()
-    {
 
-    }
     public void HandleUserInput()
     {
         while (true)
@@ -26,20 +19,27 @@ public class Controller
             try
             {
                 Console.WriteLine("Write your password:");
-                Analyzer.SetPassword(new Password(Input.AppropriateInput()));
+                Input.TryGetPassword(out string password);
+                Password pass = new Password(password);
+                Analyzer.SetPassword(pass);
                 View.DisplayAllOptions(Analyzer.options);
                 Console.WriteLine("Choose your option:");
-                Input.InputInRange(Input.AppropriateInput(), Analyzer.options, out int decision);
+                Input.TryGetNumber(Analyzer.options, out int decision);
                 // TODO Only 2 options ar first, work with your password or generate password 
                 switch (decision)
                 {
-                    case 1: Console.WriteLine("Type your password"); View.DisplayContent(Analyzer); continue;
+                    case 1: Console.WriteLine("Type your password"); View.DisplayContent(Analyzer, pass); continue;
                     case 2: View.DisplayStrength(Analyzer); continue;
-                    case 3: ; continue;
+                    case 3: View.DisplayUpToDate(Analyzer); continue;
                     case 0: break;
                     default: break;
                 }
                 break;
+            }
+            catch (Input.InvalidItemException e)
+            {
+                Console.WriteLine(e);
+                continue;
             }
             catch (Exception e)
             {

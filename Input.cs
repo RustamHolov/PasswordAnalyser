@@ -4,8 +4,12 @@ public class Input
     public Input()
     {
     }
-
-    public string AppropriateInput()
+    public class InvalidItemException : Exception{  //was made to navigate through switch -- failed
+        public InvalidItemException() : base(){}
+        public InvalidItemException(string Message) : base(Message){}
+        public InvalidItemException(string Message, Exception innerException) : base(Message, innerException){}
+    }
+    public string GenerealInput()   // avoid unknown symbols or whitespaces
     {
         string? input = Console.ReadLine();
         if (input == null || input == "")
@@ -22,15 +26,26 @@ public class Input
         }
         return input;
     }
-    public bool InputInRange(string? input, Dictionary<int, string> range, out int decision)
+    public bool TryGetNumber(Dictionary<int, string> range, out int decision)  // leads user to type correct number in menu's
     {
-        if (int.TryParse(input, out int number) && range.Keys.Any(k => k == number))
+        if (int.TryParse(GenerealInput(), out int number) && range.Keys.Any(k => k == number))
         {
-            Console.WriteLine($"You chose {input}");
             decision = number;
             return true;
+        }
+        else
+        {
+            throw new InvalidItemException("Invalid input, type a number from the list below");
+        }
+    }
+
+    public bool TryGetPassword(out string password){    //do not accept input if its less than 6 chars.
+        string input = GenerealInput();
+        if (input.Length > 6){
+            password = input;
+            return true;
         }else{
-             throw new ArgumentException("Invalid input, type a number from the list below");
+            throw new Exception("Password must be 6 or more characters");
         }
     }
 }
