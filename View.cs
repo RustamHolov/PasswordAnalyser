@@ -9,9 +9,8 @@ public class View
     public void DisplayPassword(Password pass) => Console.Write(pass.ToString());
     public void DisplayContent(Analyzer analyser, Password pass)
     {
-        Console.Write("Your password [");
-        DisplayPassword(pass);
-        Console.WriteLine($"] consist of:\n{analyser.ContentAnalyze()} ");
+        Console.Write($"Your password ["); DisplayPassword(pass); Console.WriteLine ("]");
+        Console.WriteLine(analyser.ContentAnalyze());
     }
 
     public void DisplayStrength(Analyzer analyser)
