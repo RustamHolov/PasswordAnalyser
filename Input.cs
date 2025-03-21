@@ -1,6 +1,6 @@
 public class Input
 {
-    private readonly string regex = @"^[A-Za-z0-9~`!@#$%^&*()_\-+={}[\]|\\:;'<,>.?/""]+$"; // letters, numbers and special characters
+    private readonly string _regex = @"^[A-Za-z0-9~`!@#$%^&*()_\-+={}[\]|\\:;'<,>.?/""]+$"; // letters, numbers and special characters
     public Input()
     {
     }
@@ -20,7 +20,7 @@ public class Input
         {
             throw new ArgumentException("Input cannot contain white spaces");
         }
-        if (!System.Text.RegularExpressions.Regex.IsMatch(input, regex))
+        if (!System.Text.RegularExpressions.Regex.IsMatch(input, _regex))
         {
             throw new ArgumentException("Input can only contain letters, numbers and special characters");
         }
@@ -38,7 +38,6 @@ public class Input
             throw new InvalidItemException("Invalid input, type a number from the list below");
         }
     }
-
     public bool TryGetPassword(out string password){    //do not accept input if its less than 6 chars.
         string input = GenerealInput();
         if (input.Length > 6){

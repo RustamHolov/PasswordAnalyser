@@ -11,28 +11,40 @@ public class Controller
         View = view;
         Input = input;
     }
+    public Dictionary<int, string> Options = new Dictionary<int, string>(){
+            {1, "Get password analysis"},
+            {2, "Show strength of your password"},
+            {3, "Check if your password meets minimum requirements"},
+            {0, "Exit"}
+        };
 
+    public void CreatePassword()
+    {
+        Console.WriteLine("Write your password:");
+        Input.TryGetPassword(out string password);
+        Password pass = new Password(password);
+        Analyzer.SetPassword(pass);
+    }
+    public int GetMenuItem()
+    {
+        View.DisplayMenu(Options);
+        Input.TryGetNumber(Options, out int decision);
+        return decision;
+    }
     public void HandleUserInput()
     {
+        CreatePassword();
         while (true)
         {
             try
             {
-                Console.WriteLine("Write your password:");
-                Input.TryGetPassword(out string password);
-                Password pass = new Password(password);
-                Analyzer.SetPassword(pass);
-                View.DisplayAllOptions(Analyzer.options);
-                Console.WriteLine("Choose your option:");
-                Input.TryGetNumber(Analyzer.options, out int decision);
-                // TODO Only 2 options ar first, work with your password or generate password 
-                switch (decision)
+                switch (GetMenuItem())
                 {
-                    case 1: Console.WriteLine("Type your password"); View.DisplayContent(Analyzer, pass); continue;
+                    case 1: View.DisplayContent(Analyzer); continue;
                     case 2: View.DisplayStrength(Analyzer); continue;
-                    case 3: View.DisplayUpToDate(Analyzer); continue;
+                    case 3: View.IsUpToDate(Analyzer); continue;
                     case 0: break;
-                    default: break;
+                    default: continue;
                 }
                 break;
             }
