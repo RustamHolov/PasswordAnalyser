@@ -1,7 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
-using System.Reflection;
-using System.Reflection.Emit;
 using PasswordAnalyser;
 
 public class View
@@ -30,6 +26,5 @@ public class View
         Console.WriteLine("________________________");
         Console.WriteLine("Choose your option:");
     }
-
 
 }

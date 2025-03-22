@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 public class Analyzer
 {
-    private Password _pass { get; set; } = new Password("password");  // default password if overloaded constructor not used or password wasn't set 
+    private Password _pass { get; set; } = new Password();  // default password if overloaded constructor not used or password wasn't set 
 
     #region Regex
     private const int _L = 8; // length (value and more)
@@ -67,4 +67,6 @@ public class Analyzer
         return scale.ToString();
     }
     public string PasswordInfo() => PasswordInfo(_pass);  //overload for internal use
+
+    public bool PasswordExisting() => _pass.Length > 0; 
 }

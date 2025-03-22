@@ -9,7 +9,7 @@ public class Password
     public bool HasUpperLetters;
     public bool HasNumbers;
     public bool HasSpecialSymbols;
-    public Password(string password)
+    public Password(string password = "") //default value is empty password
     {
         Sequence = password;
         Length = password.Length;

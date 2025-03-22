@@ -1,14 +1,7 @@
 public class Input
 {
     private readonly string _regex = @"^[A-Za-z0-9~`!@#$%^&*()_\-+={}[\]|\\:;'<,>.?/""]+$"; // letters, numbers and special characters
-    public Input()
-    {
-    }
-    public class InvalidItemException : Exception{  //was made to navigate through switch -- failed
-        public InvalidItemException() : base(){}
-        public InvalidItemException(string Message) : base(Message){}
-        public InvalidItemException(string Message, Exception innerException) : base(Message, innerException){}
-    }
+    public Input(){}
     public string GenerealInput()   // avoid unknown symbols or whitespaces
     {
         string? input = Console.ReadLine();
@@ -35,7 +28,7 @@ public class Input
         }
         else
         {
-            throw new InvalidItemException("Invalid input, type a number from the list below");
+            throw new Exception("Invalid input, type a number from the list below");
         }
     }
     public bool TryGetPassword(out string password){    //do not accept input if its less than 6 chars.
