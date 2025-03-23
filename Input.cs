@@ -31,9 +31,9 @@ public class Input
             throw new Exception("Invalid input, type a number from the list below");
         }
     }
-    public bool TryGetPassword(out string password){    //do not accept input if its less than 6 chars.
+    public bool TryGetPassword(out string password){    //do not accept input if its less than 6 chars. 
         string input = GenerealInput();
-        if (input.Length > 6){
+        if (input.Length >= 6){
             password = input;
             return true;
         }else{

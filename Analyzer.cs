@@ -1,14 +1,14 @@
 using System.Text;
 using System.Text.RegularExpressions;
-public class Analyzer
+public class Analyzer         //was made for both internal or external usage by overloaded constructor and related methods/properties
 {
     private Password _pass { get; set; } = new Password();  // default password if overloaded constructor not used or password wasn't set 
 
-    #region Regex
-    private const int _L = 8; // length (value and more)
-    private const int _S = 1; // count of special symblos
-    private const int _U = 1; // count of upper case letters
-    private const int _D = 1; //count of digits
+    #region Scalable minimum requirements 
+    private const int _L = 8; // length+ 
+    private const int _S = 1; // count+ of special symblos
+    private const int _U = 1; // count+ of upper case letters
+    private const int _D = 1; //count+ of digits
     public static readonly string s_minimunReq = $$"""^(?=(.*[A-Z]){{{_U}},})(?=(.*[0-9]){{{_D}},})(?=(.*[~`!@#$%^&*()_\-+={}[\]|\\:;'<,>.?/""]){{{_S}},}).{{{_L}},}$"""; // min.Req. is (_U) amount of upperCase, (_D) digits, (_S) special symbols, (_L) length
     #endregion
     public Analyzer() { }
@@ -16,10 +16,10 @@ public class Analyzer
     public void SetPassword(Password pass) => _pass = pass;
     public Password GetPassword() => _pass;
 
-    public static bool DefualtStrongPassword(Password Pass) => Regex.IsMatch(Pass.ToString(), s_minimunReq); // minimum requirements for a password
+    public static bool DefualtStrongPassword(Password Pass) => Regex.IsMatch(Pass.ToString(), s_minimunReq) || GetStrength(Pass) >= 15; // meets minimum requirements or strong enough
     public bool DefaultStrongPassword() => DefualtStrongPassword(_pass); //overload for internal use
 
-    public static string ContentAnalyze(Password Pass) => Pass switch
+    public static string ContentAnalyze(Password Pass) => Pass switch       // Provides tips based on Password properties
     {
         _ when Pass.Length < 8 => "Warning: Password length is too short. Consider using at least 8 characters.",
         _ when !Pass.HasNumbers || !Pass.HasSpecialSymbols || !Pass.HasUpperLetters => "Suggestion: For stronger passwords, include a mix of uppercase letters, lowercase letters, numbers, and special symbols.",
@@ -32,7 +32,7 @@ public class Analyzer
     };
     public string ContentAnalyze() => ContentAnalyze(_pass); //overload for internal use
 
-    public static double GetStrength(Password Pass)
+    public static double GetStrength(Password Pass)             // Provides strength in double value based on Password properties
     {
         double strength;
         strength = Pass.Letters + Pass.UppercaseLetters + Pass.Numbers + Pass.SpecialSymbols; // one point for each character 
@@ -52,7 +52,7 @@ public class Analyzer
     }
     public double GetStrength() => GetStrength(_pass); //overload for internal use
 
-    public static string PasswordInfo(Password Pass)
+    public static string PasswordInfo(Password Pass)         // Visual representation of Passwords strength
     {
         StringBuilder scale = new StringBuilder();
         int strength = (int)GetStrength(Pass);
@@ -63,10 +63,10 @@ public class Analyzer
         {
             scale.Append(i < filledLength ? "▓" : "░");
         }
-        scale.Append($"┤ {strength:F0}/20");
+        scale.Append($"┤ {filledLength:F0}/20");
         return scale.ToString();
     }
     public string PasswordInfo() => PasswordInfo(_pass);  //overload for internal use
 
-    public bool PasswordExisting() => _pass.Length > 0; 
+    public bool PasswordExists() => _pass.Length > 0;     // Checking if password was set
 }

@@ -11,67 +11,102 @@ public class Controller
         View = view;
         Input = input;
     }
-
-    public Dictionary<int, string> WelcomeMenu = new Dictionary<int, string>(){
-        {1, "Check existed"},
-        {2, "Create new"},
+    public Dictionary<int, string> MainMenu = new Dictionary<int, string>(){
+        {1, "New Password"},
+        {2, "Show strength of your password"},
+        {3, "Show password and analysis" },
+        {4, "Check if your password meets minimum requirements" },
+        {5, "Clear Password"},
         {0, "Exit"}
     };
-    public Dictionary<int, string> MainMenu = new Dictionary<int, string>(){
-            {1, "Get password analysis"},
-            {2, "Show strength of your password"},
-            {3, "Check if your password meets minimum requirements"},
-            {9, "Previous Menu"},
-            {0, "Exit"}
-        };
+    public Dictionary<int, string> InternalMenu = new Dictionary<int, string>(){
+        {1, "Try new password"},
+        {9, "Previous menu"},
+        {0, "Exit"}
+    };
 
-    public Password GetPassword()
+    public Password GetPassword()              // Creating new Password instance from user input, exceptions handling
     {
-        Console.WriteLine("Write your password:");
-        Input.TryGetPassword(out string password);
-        Password pass = new Password(password);
-        return pass;
+        try{
+            Console.WriteLine("Enter your password:");
+            Input.TryGetPassword(out string password);
+            Password pass = new Password(password);
+            return pass;
+        }catch(Exception e){
+            Console.WriteLine(e.Message);
+            return GetPassword();
+        }
     }
-    public int GetMenuItem(Dictionary<int, string> menu)
+    public int GetMenuItem(Dictionary<int, string> menu) // Navigating through menu after users input, exceptions handling
     {
-        Input.TryGetNumber(menu, out int decision);
-        return decision;
-    }
-    public void WMenu(){
-        View.DisplayMenu(WelcomeMenu);
-        switch (GetMenuItem(WelcomeMenu)){
-            case 1: Analyzer.SetPassword(GetPassword()); Console.Clear(); MMenu(); break;
-            case 2: Analyzer.SetPassword(new Password()); Console.Clear(); MMenu(); break;
-            case 0: break;
-        };
-
-    }
-    public void MMenu(){
-        View.DisplayMenu(MainMenu);
-        switch (GetMenuItem(MainMenu)){
-            case 1 when !Analyzer.PasswordExisting(): Analyzer.SetPassword(GetPassword()); goto case 1;
-            case 1: Console.Clear(); View.DisplayContent(Analyzer); MMenu(); break;
-            case 2 when !Analyzer.PasswordExisting(): Analyzer.SetPassword(GetPassword()); goto case 2;
-            case 2: Console.Clear(); View.DisplayStrength(Analyzer); MMenu(); break;
-            case 3 when !Analyzer.PasswordExisting(): Analyzer.SetPassword(GetPassword()); goto case 3;
-            case 3: Console.Clear(); View.IsUpToDate(Analyzer); MMenu(); break;
-            case 9: Console.Clear(); WMenu(); break;
-            case 0: break;
+        try{
+            Input.TryGetNumber(menu, out int decision);
+            return decision;
+        }catch (Exception e){
+            Console.WriteLine(e.Message);
+            return GetMenuItem(menu);
         }
     }
     
-    public void HandleUserInput()
+    #region Methods for better navigation 
+    public void Analysis()
     {
-        while(true){
-            try
-            {
-                WMenu();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                continue;
-            }
+        if (!Analyzer.PasswordExists()) { Analyzer.SetPassword(GetPassword()); }
+        Console.Clear();
+        View.DisplayContent(Analyzer);
+    }
+    public void Strength()
+    {
+        if (!Analyzer.PasswordExists()) { Analyzer.SetPassword(GetPassword()); }
+        Console.Clear();
+        View.DisplayStrength(Analyzer);
+    }
+    public void UpToDate()
+    {
+        if (!Analyzer.PasswordExists()) { Analyzer.SetPassword(GetPassword()); }
+        Console.Clear();
+        View.IsUpToDate(Analyzer);
+    }
+    public void SetPassword() {
+        Analyzer.SetPassword(GetPassword());
+        Console.Clear();
+    }
+
+    public void ClearPassword(){
+        Analyzer.SetPassword(new Password());
+        Console.Clear();
+    }
+    #endregion
+
+    public void RunMainMenu()    // Main menu of the programm 
+    {
+        View.DisplayStatus(Analyzer);
+        View.DisplayMenu(MainMenu);
+        switch (GetMenuItem(MainMenu))
+        {
+            case 1: SetPassword(); RunMainMenu(); break;
+            case 2: Strength(); RunInternalMenu(Strength); break;
+            case 3: Analysis(); RunInternalMenu(Analysis); break;
+            case 4: UpToDate(); RunInternalMenu(UpToDate); break;
+            case 5: ClearPassword(); RunMainMenu(); break;
+            case 0: break;
+        }
+    }
+    public void RunInternalMenu(Action act)  // internal menu for quick method reuse
+    {   
+        View.DisplayMenu(InternalMenu);
+        switch(GetMenuItem(InternalMenu)){
+            case 1: Analyzer.SetPassword(GetPassword()); act(); RunInternalMenu(act); break;
+            case 9: Console.Clear(); RunMainMenu(); break;
+            case 0: break;
+        }
+    }
+
+    public void MainFLow()
+    {
+        while (true)
+        {
+            RunMainMenu();
             break;
         }
     }
