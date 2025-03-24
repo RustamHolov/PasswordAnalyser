@@ -16,15 +16,15 @@ public class Analyzer         //was made for both internal or external usage by 
     public void SetPassword(Password pass) => _pass = pass;
     public Password GetPassword() => _pass;
 
-    public static bool DefualtStrongPassword(Password Pass) => Regex.IsMatch(Pass.ToString(), s_minimunReq) || GetStrength(Pass) >= 15; // meets minimum requirements or strong enough
-    public bool DefaultStrongPassword() => DefualtStrongPassword(_pass); //overload for internal use
+    public static bool DefaultStrongPassword(Password Pass) => Regex.IsMatch(Pass.ToString(), s_minimunReq) || GetStrength(Pass) >= 15; // meets minimum requirements or strong enough
+    public bool DefaultStrongPassword() => DefaultStrongPassword(_pass); //overload for internal use
 
     public static string ContentAnalyze(Password Pass) => Pass switch       // Provides tips based on Password properties
     {
         _ when Pass.Length < 8 => "Warning: Password length is too short. Consider using at least 8 characters.",
         _ when !Pass.HasNumbers || !Pass.HasSpecialSymbols || !Pass.HasUpperLetters => "Suggestion: For stronger passwords, include a mix of uppercase letters, lowercase letters, numbers, and special symbols.",
-        _ when DefualtStrongPassword(Pass) && Pass.Length >= 12 => "Excellent! This password has a good mix of character types and sufficient length.",
-        _ when DefualtStrongPassword(Pass) && Pass.Length < 12 => "Good password, but consider to increase the length.",
+        _ when DefaultStrongPassword(Pass) && Pass.Length >= 12 => "Excellent! This password has a good mix of character types and sufficient length.",
+        _ when DefaultStrongPassword(Pass) && Pass.Length < 12 => "Good password, but consider to increase the length.",
         _ when Regex.IsMatch(Pass.ToString().ToLower(), @"password|123456|qwerty") => "Warning: Password contains common patterns. Consider using a more unique password.",
         _ when Regex.IsMatch(Pass.ToString(), @"(.)\1{2,}") => "Warning: Password contains repeating characters. Consider using more diverse characters.",
         _ when Regex.IsMatch(Pass.ToString().ToLower(), @"abc|def|ghi|jkl|mno|pqr|stu|vwx|yz|123|456|789|012") => "Warning: Password contains sequential characters. Consider using non-sequential characters.",

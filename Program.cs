@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.Design;
-
-namespace PasswordAnalyser;
+﻿namespace PasswordAnalyser;
 
 class Program
 {
